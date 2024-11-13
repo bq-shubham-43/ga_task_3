@@ -40,6 +40,16 @@ jobs:
         run: |
           echo "Running backend tests..."  # Placeholder for actual backend job
 
+      - name: Create Pull Request for middleware
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          branch-token: ${{ secrets.PAT_TOKEN }}
+          branch: feat-button
+          title: 'Auto-generated PR for Backend changes'
+          body: 'This PR was created automatically due to changes in the backend directory.'
+          base: stagging
+          
   # JOB to build and test frontend code
   frontend:
     needs: changes
@@ -50,6 +60,16 @@ jobs:
         uses: actions/checkout@v3
       - name: Dummy Step for Frontend
         run: echo "Hello...I am a frontend step!" 
+
+      - name: Create Pull Request for middleware
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          branch-token: ${{ secrets.PAT_TOKEN }}
+          branch: feat-button
+          title: 'Auto-generated PR for Backend changes'
+          body: 'This PR was created automatically due to changes in the backend directory.'
+          base: stagging
 
   # JOB to test middleware code
   middleware:
