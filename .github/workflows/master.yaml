@@ -60,14 +60,4 @@ jobs:
       - name: Checkout middleware code
         uses: actions/checkout@v3
       - name: Dummy Step for Middleware
-        run: echo "Hello...I am a middleware step!"
-
-        
-      - name: Create Pull Request for Backend
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          branch: ${{ github.head_ref || github.ref_name }} 
-          title: 'Auto-generated PR for Backend changes'
-          body: 'This PR was created automatically due to changes in the backend directory.'
-          base: stagging
+        run: echo "Hello...I am a middleware step!
