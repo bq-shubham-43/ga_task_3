@@ -67,6 +67,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.PAT_TOKEN }}
+          branch-token: ${{ secrets.PAT_TOKEN }}
           branch: ${{ github.head_ref || github.ref_name }} 
           title: 'Auto-generated PR for Backend changes'
           body: 'This PR was created automatically due to changes in the backend directory.'
