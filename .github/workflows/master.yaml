@@ -14,8 +14,9 @@ jobs:
       middleware: ${{ steps.filter.outputs.middleware }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - uses: dorny/paths-filter@v3
+        uses: actions/checkout@v3
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
@@ -25,6 +26,14 @@ jobs:
               - 'frontend/**'
             middleware:
               - 'middleware/**'
+          base: ${{ github.head_ref || github.ref_name }}
+      - name: Debug paths-filter output
+        run: |
+          echo "Backend changed: ${{ steps.filter.outputs.backend }}"
+          echo "Frontend changed: ${{ steps.filter.outputs.frontend }}"
+          echo "Middleware changed: ${{ steps.filter.outputs.middleware }}"
+          echo "Files changed:"
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }}
 
   # JOB to test backend code
   backend:
@@ -33,7 +42,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout backend code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Run backend tests or build (replace with actual steps)
+        run: |
+          echo "Running backend tests..."  # Placeholder for actual backend job
 
   # JOB to build and test frontend code
   frontend:
@@ -42,10 +54,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout frontend code
-        uses: actions/checkout@v2
-
-      - name: Dummy Step
-        run: echo "Hello...I am a frontend step!"
+        uses: actions/checkout@v3
+      - name: Dummy Step for Frontend
+        run: echo "Hello...I am a frontend step!" 
 
   # JOB to test middleware code
   middleware:
@@ -54,7 +65,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout middleware code
-        uses: actions/checkout@v2
-
-      - name: Dummy Step
+        uses: actions/checkout@v3
+      - name: Dummy Step for Middleware
         run: echo "Hello...I am a middleware step!"
