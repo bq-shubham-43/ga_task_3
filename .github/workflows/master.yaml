@@ -75,7 +75,7 @@ jobs:
                 gh version
 
         - name: Authenticate GitHub CLI
-          run: gh auth login --with-token ${{ secrets.PAT_TOKEN}}
+          run: echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
 
         - name: Create pull request to staging
           run: |
