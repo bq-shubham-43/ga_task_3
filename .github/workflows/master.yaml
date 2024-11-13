@@ -26,7 +26,7 @@ jobs:
             middleware:
               - 'middleware/**'
 
-  # JOB to test and create PR for backend changes
+  # JOB to test backend code
   backend:
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' }}
@@ -34,20 +34,8 @@ jobs:
     steps:
       - name: Checkout backend code
         uses: actions/checkout@v2
-      - name: Debug GitHub Context
-        run: |
-           echo "Branch name: ${{ github.head_ref }}"
-            echo  "Branch name2: ${{ github.head_ref || github.ref_name }}"
-      - name: Create Pull Request for Backend
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          branch: ${{ github.head_ref || github.ref_name }} 
-          title: 'Auto-generated PR for Backend changes'
-          body: 'This PR was created automatically due to changes in the backend directory.'
-          base: stagging
 
-  # JOB to test and create PR for frontend changes
+  # JOB to build and test frontend code
   frontend:
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
@@ -56,19 +44,10 @@ jobs:
       - name: Checkout frontend code
         uses: actions/checkout@v2
 
-      - name: Dummy Step for Frontend
+      - name: Dummy Step
         run: echo "Hello...I am a frontend step!"
 
-      - name: Create Pull Request for Frontend
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          branch: ${{ github.head_ref || github.ref_name }} 
-          title: 'Auto-generated PR for Frontend changes'
-          body: 'This PR was created automatically due to changes in the frontend directory.'
-          base: stagging
-
-  # JOB to test and create PR for middleware changes
+  # JOB to test middleware code
   middleware:
     needs: changes
     if: ${{ needs.changes.outputs.middleware == 'true' }}
@@ -77,14 +56,5 @@ jobs:
       - name: Checkout middleware code
         uses: actions/checkout@v2
 
-      - name: Dummy Step for Middleware
+      - name: Dummy Step
         run: echo "Hello...I am a middleware step!"
-
-      - name: Create Pull Request for Middleware
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          branch: ${{ github.head_ref || github.ref_name }} 
-          title: 'Auto-generated PR for Middleware changes'
-          body: 'This PR was created automatically due to changes in the middleware directory.'
-          base: stagging
