@@ -81,4 +81,5 @@ jobs:
 
         - name: Create pull request to staging
           run: |
-             gh pr create --base staging --head ${{ github.head_ref }} --title "Merge into staging" --body "Automated PR to merge changes from feature branch into stagging." --label "auto-pr" --assignee @me
+            #  gh pr create --base staging --head ${{ github.head_ref }} --title "Merge into staging" --body "Automated PR to merge changes from feature branch into stagging." --label "auto-pr" --assignee @me
+            gh pr create --base stagging --head ${{ github.head_ref || github.ref_name }} --title "Merge into stagging" --body "Automated PR to merge changes from feature branch into stagging"
