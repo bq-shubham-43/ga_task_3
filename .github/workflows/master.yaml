@@ -27,13 +27,6 @@ jobs:
             middleware:
               - 'middleware/**'
           base: ${{ github.head_ref || github.ref_name }}
-      - name: Debug paths-filter output
-        run: |
-          echo "Backend changed: ${{ steps.filter.outputs.backend }}"
-          echo "Frontend changed: ${{ steps.filter.outputs.frontend }}"
-          echo "Middleware changed: ${{ steps.filter.outputs.middleware }}"
-          echo "Files changed:"
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }}
 
   # JOB to test backend code
   backend:
