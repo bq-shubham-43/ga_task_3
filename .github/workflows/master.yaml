@@ -68,7 +68,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           branch-token: ${{ secrets.PAT_TOKEN }}
-          branch: ${{ github.head_ref || github.ref_name }} 
+          branch: stagging
           title: 'Auto-generated PR for Backend changes'
           body: 'This PR was created automatically due to changes in the backend directory.'
           base: stagging
