@@ -1,0 +1,84 @@
+name: Run on Change
+on:
+  push:
+    branches:
+      - 'feat-*'
+
+jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      middleware: ${{ steps.filter.outputs.middleware }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+            middleware:
+              - 'middleware/**'
+          base: ${{ github.head_ref || github.ref_name }}
+
+  # JOB to test backend code
+  backend:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout backend code
+        uses: actions/checkout@v3
+      - name: Run backend tests or build (replace with actual steps)
+        run: |
+          echo "Running backend tests..."  # Placeholder for actual backend job
+
+  # JOB to build and test frontend code
+  frontend:
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout frontend code
+        uses: actions/checkout@v3
+      - name: Dummy Step for Frontend
+        run: echo "Hello...I am a frontend step!" 
+
+  # JOB to test middleware code
+  middleware:
+    needs: changes
+    if: ${{ needs.changes.outputs.middleware == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout middleware code
+        uses: actions/checkout@v3
+      - name: Dummy Step for Middleware
+        run: echo "Hello...I am a middleware step!"
+
+  create-pr:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.middleware == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout feature branch
+          uses: actions/checkout@v3
+
+        - name: Github Cli version
+          run: |
+                gh version
+
+        - name: Authenticate GitHub CLI
+          run: |
+            ${{ secrets.PAT_TOKEN }} | gh auth login --with-token
+
+
+        - name: Create pull request to staging
+          run: |
+            gh pr create --base stagging --head ${{ github.head_ref}} --title "Merge into stagging" --body "Automated PR to merge changes from feature branch into stagging"
